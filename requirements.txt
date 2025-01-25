@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+loguru
+selenium
+webdriver-manager
+undetected-chromedriver
+setuptools
+requests
+selenium-wire
+blinker==1.7.0
