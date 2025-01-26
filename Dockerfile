@@ -20,6 +20,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 9009 5900
+EXPOSE 9004 5900
 
 CMD ["sh", "-c", "pkill Xvfb; xvfb-run -a -s '-screen 0 1024x768x24' python3 main.py"]
