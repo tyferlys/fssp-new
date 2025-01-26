@@ -1,14 +1,29 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 
-from src.task.schemas import InputTask
-from src.task.service import TaskService
+from src.task.schemas import InputTask, OutputTask
+from src.utils.queue.queue import QueueFSSP
 
 router = APIRouter()
 
 
-@router.get("/")
-def create_task(
-        input_task: InputTask,
-        task_service: TaskService = Depends(TaskService),
-):
-    return task_service.create_task(input_task)
+@router.post("/tasks")
+async def create_task(priority_task: int, task_input: InputTask) -> OutputTask:
+    return await QueueFSSP.put_task(priority_task, task_input)
+
+@router.get("/tasks/{uuid}")
+async def get_task(uuid: str, response: Response):
+    result = await QueueFSSP.get_task(uuid)
+    if result is None or result == "":
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return None
+    elif result.status_code == 100:
+        response.status_code = status.HTTP_202_ACCEPTED
+        return None
+    elif result.status_code == 400:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return None
+    elif result.status_code == 500:
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return None
+    else:
+        return result

@@ -8,3 +8,6 @@ class InputTask(BaseModel):
     first_name: str
     middle_name: str
     birth_date: str
+
+class OutputTask(BaseModel):
+    uuid: str
