@@ -217,10 +217,16 @@ class ParserFSSP:
             driver.get(cls._url)
 
             cls._enter_data(driver, actions, input_task)
+
+            count = 1
             while not cls._send_request(driver):
+                if count >= 5:
+                    raise Exception("Запрос не отправляется. Попробуйте позже")
                 driver.execute_script("location.reload();")
                 time.sleep(5)
                 cls._enter_data(driver, actions, input_task)
+                count += 1
+
             cls._get_answer(driver)
 
             status, result = cls._get_result(driver)
@@ -236,13 +242,13 @@ class ParserFSSP:
 
 
 if __name__ == '__main__':
-    pass
-    # for i in range(0, 150):
-    #     ParserFSSP.start_parse(InputTask(
-    #         last_name="Черноглазов",
-    #         first_name="Владислав",
-    #         middle_name="Сергеевич",
-    #         birth_date="22.04.1989"
-    #     ), None)
+    ParserFSSP.start_parse(
+        InputTask(
+            last_name="Черноглазов",
+            first_name="Владислав",
+            middle_name="Сергеевич",
+            birth_date="22.04.1989"
+        )
+    )
 
 
