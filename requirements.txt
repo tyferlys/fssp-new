@@ -9,3 +9,4 @@ requests
 selenium-wire
 blinker==1.7.0
 aiohttp
+python-dotenv
