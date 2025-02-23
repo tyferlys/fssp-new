@@ -142,10 +142,10 @@ class ParserFSSP:
             seleniumwire_options = {
                 'proxy': proxy,
             }
-            driver = uc.Chrome(headless=False, use_subprocess=False, version_main=131, options=options,
+            driver = uc.Chrome(headless=False, use_subprocess=False, version_main=133, options=options,
                                seleniumwire_options=seleniumwire_options)
         else:
-            driver = uc.Chrome(headless=False, use_subprocess=False, version_main=131, options=options)
+            driver = uc.Chrome(headless=False, use_subprocess=False, version_main=133, options=options)
 
         return driver
 
