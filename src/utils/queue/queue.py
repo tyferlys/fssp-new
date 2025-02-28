@@ -70,7 +70,6 @@ class QueueFSSP:
                 except Exception as e:
                     task.result = ""
                     task.status_code = 500
-                    loguru.logger.exception(e)
                 finally:
                     task.datetime_ready = datetime.datetime.now()
 

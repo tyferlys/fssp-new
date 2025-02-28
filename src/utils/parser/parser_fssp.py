@@ -235,6 +235,7 @@ class ParserFSSP:
         except Exception as e:
             loguru.logger.exception(e)
             driver.save_screenshot(f"{str(uuid.uuid4())}.png")
+            raise Exception()
         finally:
             time.sleep(1)
             driver.quit()
