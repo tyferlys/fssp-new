@@ -34,7 +34,7 @@ class QueueFSSP:
                     task_data=task_input
                 )
             )
-
+        loguru.logger.info(f"Всего задач - {cls.state.tasks}")
         return OutputTask(uuid=uuid_task)
 
     @classmethod
@@ -51,6 +51,7 @@ class QueueFSSP:
 
     @classmethod
     async def start_worker(cls):
+        loguru.logger.info("Вокер начал работу")
         while True:
             task: Task = min(
                 (task for task in cls.state.tasks if task.datetime_ready is None),
@@ -59,6 +60,7 @@ class QueueFSSP:
             )
 
             if task:
+                loguru.logger.info(f"Получена задача - {task}")
                 try:
                     result = await asyncio.to_thread(ParserFSSP.start_parse, task.task_data)
                     task.result = result
