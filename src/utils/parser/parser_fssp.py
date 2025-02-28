@@ -210,6 +210,7 @@ class ParserFSSP:
     @classmethod
     def start_parse(cls, input_task: InputTask):
         # proxy_string = await get_proxy()
+        loguru.logger.info("Получаем driver для fssp")
         driver = cls._get_driver(None)
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
