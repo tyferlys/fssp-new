@@ -33,7 +33,7 @@ class QueueFSSP:
                 task_data=task_input
             )
         )
-        loguru.logger.info(f"Всего задач - {cls.state.tasks}")
+        loguru.logger.info(f"Добавлена задача, всего задач - {len(cls.state.tasks)}")
         return OutputTask(uuid=uuid_task)
 
     @classmethod
