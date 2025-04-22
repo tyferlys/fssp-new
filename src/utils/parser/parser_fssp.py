@@ -4,10 +4,9 @@ import re
 import time
 import uuid
 from typing import Optional
-
+import undetected_chromedriver as uc
 import loguru
 import requests
-from seleniumwire import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
@@ -130,22 +129,7 @@ class ParserFSSP:
 
     @classmethod
     def _get_driver(cls, proxy_string: Optional[str]):
-        options = uc.ChromeOptions()
-        options.add_argument('--ignore-certificate-errors')
-        options.add_argument('--disable-web-security')
-        proxy = {
-            'http': proxy_string,
-            'https': proxy_string,
-        }
-
-        if proxy_string:
-            seleniumwire_options = {
-                'proxy': proxy,
-            }
-            driver = uc.Chrome(headless=False, use_subprocess=False, version_main=133, options=options,
-                               seleniumwire_options=seleniumwire_options)
-        else:
-            driver = uc.Chrome(headless=False, use_subprocess=False, version_main=133, options=options)
+        driver = uc.Chrome(headless=False)
 
         return driver
 
