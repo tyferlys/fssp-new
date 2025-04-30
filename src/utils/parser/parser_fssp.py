@@ -129,7 +129,7 @@ class ParserFSSP:
 
     @classmethod
     def _get_driver(cls, proxy_string: Optional[str]):
-        driver = uc.Chrome(headless=False)
+        driver = uc.Chrome(headless=False, version_main=135)
 
         return driver
 

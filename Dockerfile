@@ -13,8 +13,14 @@ RUN apt-get update && apt-get install -y \
     unzip \
     xvfb \
     x11vnc \
-    chromium \
-    chromium-driver
+    chromium
+
+RUN CHROMEDRIVER_VERSION=135.0.7049.95 && \
+    wget -O /tmp/chromedriver_linux64.zip https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip && \
+    unzip /tmp/chromedriver_linux64.zip -d /tmp/ && \
+    mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
+    chmod +x /usr/local/bin/chromedriver && \
+    rm -rf /tmp/chromedriver_linux64.zip /tmp/chromedriver-linux64
 
 RUN pip install -r requirements.txt
 
