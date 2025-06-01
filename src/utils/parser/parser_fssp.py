@@ -199,6 +199,7 @@ class ParserFSSP:
         chrome_options.add_argument("--disable-gpu")  # Отключить GPU (опционально
 
         service = Service(ChromeDriverManager().install())
+        loguru.logger.info("драйвер скачался")
         driver = webdriver.Chrome(service=service)
 
         loguru.logger.info(f"Старт работы парсера - {input_task}")
