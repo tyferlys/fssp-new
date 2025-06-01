@@ -3,23 +3,19 @@ import os
 import re
 import time
 import uuid
-from typing import Optional
 
-import selenium
-import undetected_chromedriver as uc
 import loguru
 import requests
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumwire import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
 from src.task.schemas import InputTask
-from src.utils.get_proxy import get_proxy
+
 
 
 class ParserFSSP:
