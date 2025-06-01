@@ -15,6 +15,7 @@ from selenium import webdriver
 
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from webdriver_manager.chrome import ChromeDriverManager
 
 from src.task.schemas import InputTask
 
@@ -193,12 +194,11 @@ class ParserFSSP:
         loguru.logger.info("Получаем driver для fssp")
 
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Запуск без GUI
         chrome_options.add_argument("--no-sandbox")  # Обязательный флаг в Docker
         chrome_options.add_argument("--disable-dev-shm-usage")  # Уменьшает использование /dev/shm
         chrome_options.add_argument("--disable-gpu")  # Отключить GPU (опционально
 
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(ChromeDriverManager().install())
 
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
