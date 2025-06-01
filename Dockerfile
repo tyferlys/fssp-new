@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     x11vnc \
     chromium
 
-RUN CHROMEDRIVER_VERSION=135.0.7049.95 && \
+RUN CHROMEDRIVER_VERSION=137.0.7151.55 && \
     wget -O /tmp/chromedriver_linux64.zip https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip && \
     unzip /tmp/chromedriver_linux64.zip -d /tmp/ && \
     mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
