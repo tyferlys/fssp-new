@@ -131,20 +131,6 @@ class ParserFSSP:
             except Exception as e:
                 break
 
-
-    @classmethod
-    def _get_driver(cls, proxy_string: Optional[str]):
-        options = Options()
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-
-        options.binary_location = "/usr/bin/google-chrome"
-
-        service = Service("/usr/local/bin/chromedriver")
-
-        driver = webdriver.Chrome(service=service, options=options)
-        return driver
-
     @classmethod
     def _get_result(cls, driver):
         WebDriverWait(driver, 60).until(
@@ -207,7 +193,17 @@ class ParserFSSP:
     def start_parse(cls, input_task: InputTask):
         # proxy_string = await get_proxy()
         loguru.logger.info("Получаем driver для fssp")
-        driver = cls._get_driver(None)
+
+        options = Options()
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
+        options.binary_location = "/usr/bin/google-chrome"
+
+        service = Service("/usr/local/bin/chromedriver")
+
+        driver = webdriver.Chrome(service=service, options=options)
+
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
             actions = ActionChains(driver)
