@@ -9,6 +9,8 @@ import selenium
 import undetected_chromedriver as uc
 import loguru
 import requests
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
@@ -131,8 +133,15 @@ class ParserFSSP:
 
     @classmethod
     def _get_driver(cls, proxy_string: Optional[str]):
-        driver = selenium.webdriver.Chrome()
+        options = Options()
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
 
+        options.binary_location = "/usr/bin/google-chrome"
+
+        service = Service("/usr/local/bin/chromedriver")
+
+        driver = webdriver.Chrome(service=service, options=options)
         return driver
 
     @classmethod
