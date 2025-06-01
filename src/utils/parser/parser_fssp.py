@@ -6,6 +6,7 @@ import uuid
 
 import loguru
 import requests
+from selenium.webdriver.chrome.service import Service
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -189,7 +190,8 @@ class ParserFSSP:
     def start_parse(cls, input_task: InputTask):
         # proxy_string = await get_proxy()
         loguru.logger.info("Получаем driver для fssp")
-        driver = webdriver.Chrome()
+        service = Service("/usr/local/bin/chromedriver")
+        driver = webdriver.Chrome(service=service)
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
             actions = ActionChains(driver)
