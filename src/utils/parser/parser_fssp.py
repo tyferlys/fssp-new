@@ -4,6 +4,8 @@ import re
 import time
 import uuid
 from typing import Optional
+
+import selenium
 import undetected_chromedriver as uc
 import loguru
 import requests
@@ -129,7 +131,7 @@ class ParserFSSP:
 
     @classmethod
     def _get_driver(cls, proxy_string: Optional[str]):
-        driver = uc.Chrome(headless=False, version_main=135)
+        driver = selenium.webdriver.Chrome()
 
         return driver
 
