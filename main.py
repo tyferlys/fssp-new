@@ -1,5 +1,7 @@
+import loguru
 import uvicorn
 from fastapi import FastAPI
+from seleniumwire import webdriver
 from starlette.middleware.cors import CORSMiddleware
 
 from src.task.router import router as task_router
@@ -17,4 +19,7 @@ app.add_middleware(
 app.include_router(task_router)
 
 if __name__ == "__main__":
+    loguru.logger.info("драйвер запуск")
+    driver = webdriver.Chrome()
+    loguru.logger.info("драйвер получен")
     uvicorn.run(app, host="0.0.0.0", port=9004)
