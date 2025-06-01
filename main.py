@@ -21,6 +21,5 @@ app.include_router(task_router)
 if __name__ == "__main__":
     loguru.logger.info("драйвер запуск")
     driver = webdriver.Chrome()
-    driver.quit()
     loguru.logger.info("драйвер получен")
     uvicorn.run(app, host="0.0.0.0", port=9004)
