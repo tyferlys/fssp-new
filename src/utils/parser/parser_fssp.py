@@ -1,6 +1,8 @@
 import base64
 import os
 import re
+import shutil
+import tempfile
 import time
 import uuid
 
@@ -191,13 +193,15 @@ class ParserFSSP:
         # proxy_string = await get_proxy()
         loguru.logger.info("Получаем driver для fssp")
 
-        chrome_options = Options()
-        chrome_options.add_argument("--no-sandbox")  # Обязательный флаг в Docker
-        chrome_options.add_argument("--disable-dev-shm-usage")  # Уменьшает использование /dev/shm
-        chrome_options.add_argument("--disable-gpu")  # Отключить GPU (опционально
+        temp_user_data_dir = tempfile.mkdtemp()
+        options = Options()
+        options.binary_location = "/usr/bin/chromium"  # путь к Chromium внутри контейнера
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument(f"--user-data-dir={temp_user_data_dir}")
 
-
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(options=options)
 
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
@@ -225,6 +229,7 @@ class ParserFSSP:
             driver.save_screenshot(f"{str(uuid.uuid4())}.png")
             raise Exception()
         finally:
+            shutil.rmtree(temp_user_data_dir)
             time.sleep(1)
             driver.quit()
             time.sleep(1)
