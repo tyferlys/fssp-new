@@ -1,7 +1,7 @@
 import loguru
 import uvicorn
 from fastapi import FastAPI
-from seleniumwire import webdriver
+from selenium import webdriver
 from starlette.middleware.cors import CORSMiddleware
 
 from src.task.router import router as task_router
