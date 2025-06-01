@@ -6,6 +6,7 @@ import uuid
 
 import loguru
 import requests
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
 from selenium.webdriver.common.by import By
@@ -190,8 +191,15 @@ class ParserFSSP:
     def start_parse(cls, input_task: InputTask):
         # proxy_string = await get_proxy()
         loguru.logger.info("Получаем driver для fssp")
+
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Запуск без GUI
+        chrome_options.add_argument("--no-sandbox")  # Обязательный флаг в Docker
+        chrome_options.add_argument("--disable-dev-shm-usage")  # Уменьшает использование /dev/shm
+        chrome_options.add_argument("--disable-gpu")  # Отключить GPU (опционально
+
         service = Service("/usr/local/bin/chromedriver")
-        driver = webdriver.Chrome(service=service)
+        driver = webdriver.Chrome(service=service, options=chrome_options)
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
             actions = ActionChains(driver)
