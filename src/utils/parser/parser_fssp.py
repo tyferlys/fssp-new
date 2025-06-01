@@ -198,7 +198,8 @@ class ParserFSSP:
         chrome_options.add_argument("--disable-dev-shm-usage")  # Уменьшает использование /dev/shm
         chrome_options.add_argument("--disable-gpu")  # Отключить GPU (опционально
 
-        driver = webdriver.Chrome(ChromeDriverManager().install())
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service)
 
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
