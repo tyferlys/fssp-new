@@ -193,17 +193,7 @@ class ParserFSSP:
     def start_parse(cls, input_task: InputTask):
         # proxy_string = await get_proxy()
         loguru.logger.info("Получаем driver для fssp")
-
-        options = Options()
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-
-        options.binary_location = "/usr/bin/google-chrome"
-
-        service = Service("/usr/local/bin/chromedriver")
-
-        driver = webdriver.Chrome(service=service, options=options)
-
+        driver = webdriver.Chrome()
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
             actions = ActionChains(driver)

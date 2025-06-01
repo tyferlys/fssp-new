@@ -48,10 +48,8 @@ starlette==0.45.3
 trio==0.28.0
 trio-websocket==0.11.1
 typing_extensions==4.12.2
-undetected-chromedriver==3.5.5
 urllib3==2.3.0
 uvicorn==0.34.0
-webdriver-manager==4.0.2
 websocket-client==1.8.0
 websockets==14.2
 win32_setctime==1.2.0
