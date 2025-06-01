@@ -3,4 +3,3 @@ loguru
 selenium
 uvicorn
 pydantic
-webdriver-manager
