@@ -193,9 +193,10 @@ class ParserFSSP:
         # proxy_string = await get_proxy()
         loguru.logger.info("Получаем driver для fssp")
 
-        temp_user_data_dir = tempfile.mkdtemp()
+        temp_user_data_dir = tempfile.mkdtemp(prefix="chrome_", suffix="_profile")
         options = Options()
-        options.binary_location = "/usr/bin/chromium" 
+        options.binary_location = "/usr/bin/chromium"  # путь к Chromium внутри контейнера
+        options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
