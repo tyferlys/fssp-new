@@ -195,11 +195,9 @@ class ParserFSSP:
 
         temp_user_data_dir = tempfile.mkdtemp()
         options = Options()
-        options.binary_location = "/usr/bin/chromium"  # путь к Chromium внутри контейнера
-        options.add_argument("--headless")
+        options.binary_location = "/usr/bin/chromium" 
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        options.add_argument(f"--user-data-dir={temp_user_data_dir}")
 
         driver = webdriver.Chrome(options=options)
 
