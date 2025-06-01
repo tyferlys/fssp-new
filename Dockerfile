@@ -21,4 +21,4 @@ COPY . .
 
 EXPOSE 8000 5900
 
-CMD ["python3", "main.py"]
+CMD ["sh", "-c", "pkill Xvfb; xvfb-run -a -s '-screen 0 1024x768x24' python3 main.py"]
