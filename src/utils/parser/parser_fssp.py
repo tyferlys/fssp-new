@@ -74,10 +74,10 @@ class ParserFSSP:
 
         try:
             WebDriverWait(driver, 20).until(
-                EC.element_to_be_clickable((By.ID, "captchaAudioTrigger"))
+                EC.element_to_be_clickable((By.ID, "ncapcha-submit"))
             )
             return True
-        except:
+        except Exception as e:
             WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'b-search-message__text') or contains(@class, 'results')]"))
             )
@@ -92,11 +92,15 @@ class ParserFSSP:
 
         for i in range(0, 5):
             WebDriverWait(driver, 30).until(
-                EC.element_to_be_clickable((By.ID, "captchaAudioTrigger"))
+                EC.element_to_be_clickable((By.ID, "ncapcha-submit"))
             )
             time.sleep(2)
 
-            captcha_base64 = driver.find_element(By.ID, "capchaVisualImage").get_attribute("src")
+            # loguru.logger.info(driver.page_source)
+            try:
+                captcha_base64 = driver.find_element(By.XPATH, "//img[contains(@id, 'capchaVisualImage')]").get_attribute("src")
+            except:
+                captcha_base64 = driver.find_element(By.XPATH,"//img[contains(@id, 'capchaVisual')]").get_attribute("src")
             captcha = CaptchaManager.get_answer_captcha(captcha_base64)
 
             loguru.logger.success(f"Каптча распознана - {captcha}")
@@ -211,7 +215,6 @@ class ParserFSSP:
             return result
         except Exception as e:
             loguru.logger.exception(e)
-            driver.save_screenshot(f"{str(uuid.uuid4())}.png")
             raise Exception()
         finally:
             shutil.rmtree(temp_user_data_dir)
@@ -221,13 +224,15 @@ class ParserFSSP:
 
 
 if __name__ == '__main__':
-    ParserFSSP.start_parse(
-        InputTask(
-            last_name="Черноглазов",
-            first_name="Владислав",
-            middle_name="Сергеевич",
-            birth_date="22.04.1989"
+    for i in range(0, 100):
+        loguru.logger.info("---------------------------------------------------------------------------------------")
+        ParserFSSP.start_parse(
+            InputTask(
+                last_name="Черноглазов",
+                first_name="Владислав",
+                middle_name="Сергеевич",
+                birth_date="22.04.1989"
+            )
         )
-    )
 
 
