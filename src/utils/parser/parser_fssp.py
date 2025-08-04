@@ -5,7 +5,6 @@ import shutil
 import tempfile
 import time
 import uuid
-import assemblyai as aai
 
 import loguru
 import requests
@@ -20,9 +19,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 from src.task.schemas import InputTask
 from src.utils.CaptchaManager import CaptchaManager
-
-aai.settings.api_key = "32654f584ba249c1b6c15b633611d4d5"
-config_aai = aai.TranscriptionConfig(speech_model=aai.SpeechModel.best)
 
 
 class ParserFSSP:
