@@ -134,7 +134,8 @@ class ParserFSSP:
             results = {}
             rows = driver.find_elements(By.XPATH, '//table//tr[@class!="region-title"]')
 
-            loguru.logger.info(f"Таблица нашлась {text_element}, количество строк - {len(rows)}")
+            loguru.logger.info(f"Таблица нашлась, статус -  {text_element}, количество строк - {len(rows)}")
+            loguru.logger.info(driver.page_source)
             for i, row in enumerate(rows):
                 columns = [c.text.strip() for c in row.find_elements(By.XPATH, './/td')]
 
