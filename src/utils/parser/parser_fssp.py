@@ -130,12 +130,10 @@ class ParserFSSP:
         if "по вашему запросу ничего не найдено" in text_element:
             return True, "Ничего не найдено"
         else:
-
             results = {}
-            rows = driver.find_elements(By.XPATH, '//table//tr[@class!="region-title"]')
+            rows = driver.find_elements(By.XPATH, '//div[contains(@class, "results-frame")]').find_elements(By.TAG_NAME, 'tr')
 
             loguru.logger.info(f"Таблица нашлась, статус -  {text_element}, количество строк - {len(rows)}")
-            loguru.logger.info(driver.page_source)
             for i, row in enumerate(rows):
                 columns = [c.text.strip() for c in row.find_elements(By.XPATH, './/td')]
 
