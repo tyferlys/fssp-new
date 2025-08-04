@@ -134,10 +134,11 @@ class ParserFSSP:
             rows = [row for row in driver.find_element(By.XPATH, '//div[contains(@class, "results-frame")]').find_elements(By.TAG_NAME, 'tr') if "region-title" not in row.get_attribute("class")]
             rows_temp = [row for row in driver.find_element(By.XPATH, '//div[contains(@class, "results-frame")]').find_elements(By.TAG_NAME, 'tr')]
 
-            loguru.logger.info(f"{len(rows)} -- {len(rows_temp)}")
             loguru.logger.info(f"Таблица нашлась, статус -  {text_element}, количество строк - {len(rows)}")
             for i, row in enumerate(rows):
                 columns = [c.text.strip() for c in row.find_elements(By.TAG_NAME, 'td')]
+                if len(columns) == 0:
+                    continue
 
                 person = columns[0].replace('\n', ' ').strip()
                 person_lines = columns[0].split('\n')
