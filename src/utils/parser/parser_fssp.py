@@ -135,7 +135,9 @@ class ParserFSSP:
 
             loguru.logger.info(f"Таблица нашлась, статус -  {text_element}, количество строк - {len(rows)}")
             for i, row in enumerate(rows):
-                columns = [c.text.strip() for c in row.find_elements(By.XPATH, './/td')]
+                loguru.logger.info(row)
+                columns = [c.text.strip() for c in row.find_elements(By.TAG_NAME, 'td')]
+                loguru.logger.info(columns)
 
                 person = columns[0].replace('\n', ' ').strip()
                 person_lines = columns[0].split('\n')
