@@ -1,0 +1,7 @@
+fastapi
+loguru
+selenium
+uvicorn
+pydantic
+requests
+2captcha-python
