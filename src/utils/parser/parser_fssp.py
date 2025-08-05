@@ -125,14 +125,17 @@ class ParserFSSP:
         WebDriverWait(driver, 60).until(
             EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'b-search-message__text') or contains(@class, 'results-frame')]"))
         )
-        text_element = driver.find_element(By.XPATH, "//div[contains(@class, 'b-search-message__text') or contains(@class, 'results-frame')]").text.strip().lower()
+        text_elements = driver.find_elements(By.XPATH, "//div[contains(@class, 'b-search-message__text')]")
+        text_element = ""
+        for text_element_temp in text_elements:
+            text_element += text_element_temp.text.strip().lower() + " "
 
         if "по вашему запросу ничего не найдено" in text_element:
             return True, "Ничего не найдено"
         else:
             results = {}
-            loguru.logger.info(driver.page_source)
-            rows = [row for row in driver.find_element(By.XPATH, '//div[contains(@class, "results-frame")]').find_elements(By.TAG_NAME, 'tr') if "region-title" not in row.get_attribute("class")]
+
+            rows = [row for row in driver.find_element(By.CLASS_NAME, 'results-frame').find_elements(By.TAG_NAME, 'tr') if "region-title" not in row.get_attribute("class")]
 
             loguru.logger.info(f"Таблица нашлась, статус -  {text_element}, количество строк - {len(rows)}")
             for i, row in enumerate(rows):
