@@ -1,8 +1,9 @@
+import asyncio
 from asyncio import Semaphore
 
 from fastapi import APIRouter, Depends, Response, status
 
-from src.task.schemas import InputTask, OutputTask
+from src.task.schemas import InputTask, OutputTask, HealthCheckStatus
 from src.utils.queue.queue import QueueFSSP
 from src.utils.queue.schemas import Task
 
@@ -33,3 +34,29 @@ async def get_task(uuid: str, response: Response):
             return None
         else:
             return result.result
+
+@router.get("/health")
+async def check_health(response: Response) -> HealthCheckStatus:
+    async with semaphore:
+        output_task = await QueueFSSP.put_task(0, InputTask(
+            last_name="Черноглазов",
+            first_name="Владислав",
+            middle_name="Сергеевич",
+            birth_date="22.04.1989"
+        ))
+
+        result: Task = await QueueFSSP.get_task(output_task.uuid)
+        while result.status_code == 100:
+            await asyncio.sleep(1)
+
+            result: Task = await QueueFSSP.get_task(output_task.uuid)
+            if result.status_code == 500:
+                return HealthCheckStatus(status=False)
+            elif result.status_code == 400 or result.status_code == 200:
+                return HealthCheckStatus(status=True)
+            elif result.status_code == 100:
+                continue
+            else:
+                return HealthCheckStatus(status=False)
+
+        return HealthCheckStatus(status=False)
