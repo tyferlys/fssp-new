@@ -45,9 +45,11 @@ async def check_health(response: Response) -> HealthCheckStatus:
             birth_date="22.04.1989"
         ))
 
+        counter = 0
         result: Task = await QueueFSSP.get_task(output_task.uuid)
-        while result.status_code == 100:
+        while result.status_code == 100 and counter < 180:
             await asyncio.sleep(1)
+            counter += 1
 
             result: Task = await QueueFSSP.get_task(output_task.uuid)
             if result.status_code == 500:
