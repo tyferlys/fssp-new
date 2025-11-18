@@ -21,7 +21,7 @@ async def get_task(uuid: str, response: Response):
     async with semaphore:
         result: Task = await QueueFSSP.get_task(uuid)
 
-        if result is None or result == "":
+        if result is None or result == "" or result.status_code == 400:
             response.status_code = status.HTTP_404_NOT_FOUND
             return None
         if result.status_code == 500:
@@ -29,9 +29,6 @@ async def get_task(uuid: str, response: Response):
             return None
         elif result.status_code == 100:
             response.status_code = status.HTTP_202_ACCEPTED
-            return None
-        elif result.status_code == 400:
-            response.status_code = status.HTTP_404_NOT_FOUND
             return None
         else:
             return result.result
