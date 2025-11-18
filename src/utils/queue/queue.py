@@ -65,6 +65,8 @@ class QueueFSSP:
 
                     if task.result is None or task.result == "" or task.result == "Ничего не найдено":
                         task.status_code = 400
+                    elif isinstance(task.result, str):
+                        task.status_code = 500
                     else:
                         task.status_code = 200
                 except Exception as e:
