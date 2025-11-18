@@ -1,6 +1,7 @@
 import asyncio
 from asyncio import Semaphore
 
+import loguru
 from fastapi import APIRouter, Depends, Response, status
 
 from src.task.schemas import InputTask, OutputTask, HealthCheckStatus
