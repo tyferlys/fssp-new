@@ -22,7 +22,7 @@ from src.utils.CaptchaManager import CaptchaManager
 
 
 class ParserFSSP:
-    _url = "https://fssp.gov.ru"
+    _url = "https://fssp.gov.ru/iss/ip"
     _current_directory = os.path.dirname(os.path.abspath(__file__))
     _headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
