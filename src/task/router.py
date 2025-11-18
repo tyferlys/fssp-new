@@ -1,5 +1,6 @@
 import asyncio
 from asyncio import Semaphore
+from typing import Optional
 
 import loguru
 from fastapi import APIRouter, Depends, Response, status
@@ -19,19 +20,19 @@ async def create_task(priority_task: int, task_input: InputTask) -> OutputTask:
 @router.get("/tasks/{uuid}")
 async def get_task(uuid: str, response: Response):
     async with semaphore:
-        result: Task = await QueueFSSP.get_task(uuid)
+        result: Optional[Task] = await QueueFSSP.get_task(uuid)
 
-        if result is None or result == "" or result.status_code == 400:
+        if result is None or result.status_code == 400:
             response.status_code = status.HTTP_404_NOT_FOUND
             return None
-        if result.status_code == 500:
-            response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-            return None
+        elif result.status_code == 200:
+            return result.result
         elif result.status_code == 100:
             response.status_code = status.HTTP_202_ACCEPTED
             return None
         else:
-            return result.result
+            response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            return None
 
 @router.get("/health")
 async def check_health(response: Response) -> HealthCheckStatus:

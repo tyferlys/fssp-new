@@ -115,11 +115,11 @@ class ParserFSSP:
         soup2 = BeautifulSoup(cls._prepare_test_to_html(response2.text), 'html.parser')
 
         if "по вашему запросу ничего не найдено" in soup2.text.lower():
-            return True, "Ничего не найдено"
+            return "Ничего не найдено"
 
         results_frame = soup2.find('div', class_='results-frame')
         if not results_frame:
-            return False, "Таблица не найдена"
+            return "Таблица не найдена"
 
         rows = soup2.find_all('td', attrs={'colspan': False})
 
@@ -127,7 +127,7 @@ class ParserFSSP:
             loguru.logger.success("Количество блоков верное")
         else:
             loguru.logger.warning("Количество блоков неверное")
-            return False, "Ошибка в количестве блоков"
+            return "Ошибка в количестве блоков"
 
         results = {}
         index_start = 0
@@ -177,13 +177,13 @@ class ParserFSSP:
             index_block += 1
             index_start += 8
 
-        return True, results
+        return results
 
     @classmethod
     def start_parse(cls, input_task: InputTask):
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
-            status, result = cls._get_result(input_task)
+            result = cls._get_result(input_task)
             loguru.logger.success(result)
             return result
         except Exception as e:

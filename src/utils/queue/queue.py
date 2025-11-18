@@ -6,6 +6,7 @@ from asyncio import Semaphore
 from asyncio import Queue
 import datetime
 from concurrent.futures.process import ProcessPoolExecutor
+from typing import Optional
 
 import loguru
 
@@ -37,7 +38,7 @@ class QueueFSSP:
         return OutputTask(uuid=uuid_task)
 
     @classmethod
-    async def get_task(cls, uuid: str) -> Task:
+    async def get_task(cls, uuid: str) -> Optional[Task]:
         if not cls.state.started:
             cls.state.started = True
             asyncio.create_task(cls.start_worker())
@@ -45,6 +46,7 @@ class QueueFSSP:
         for task in cls.state.tasks:
             if task.uuid == uuid:
                 return task
+
         return None
 
     @classmethod
@@ -63,14 +65,13 @@ class QueueFSSP:
                     result = await asyncio.to_thread(ParserFSSP.start_parse, task.task_data)
                     task.result = result
 
-                    if task.result is None or task.result == "" or task.result == "Ничего не найдено":
+                    if task.result == "Ничего не найдено":
                         task.status_code = 400
                     elif isinstance(task.result, str):
                         task.status_code = 500
                     else:
                         task.status_code = 200
                 except Exception as e:
-                    task.result = ""
                     task.status_code = 500
                 finally:
                     task.datetime_ready = datetime.datetime.now()
