@@ -5,3 +5,4 @@ uvicorn
 pydantic
 requests
 2captcha-python
+beautifulsoup4
