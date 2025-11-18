@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     xvfb \
     x11vnc \
-    chromium
+    chromium \
+    chromium-driver
 
 RUN pip install -r requirements.txt
 
