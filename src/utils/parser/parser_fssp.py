@@ -183,7 +183,7 @@ class ParserFSSP:
     def start_parse(cls, input_task: InputTask):
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         try:
-            result = cls._get_result(input_task)
+            status, result = cls._get_result(input_task)
             loguru.logger.success(result)
             return result
         except Exception as e:
