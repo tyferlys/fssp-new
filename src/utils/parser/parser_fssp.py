@@ -186,7 +186,6 @@ class ParserFSSP:
             loguru.logger.info(f"Попытка - {i + 1}")
             try:
                 result = cls._get_result(input_task)
-
                 loguru.logger.success(result)
                 return result
             except Exception as e:
