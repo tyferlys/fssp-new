@@ -119,7 +119,7 @@ class ParserFSSP:
 
         results_frame = soup2.find('div', class_='results-frame')
         if not results_frame:
-            return "Таблица не найдена"
+            raise Exception("Таблица не найдена")
 
         rows = soup2.find_all('td', attrs={'colspan': False})
 
@@ -127,7 +127,7 @@ class ParserFSSP:
             loguru.logger.success("Количество блоков верное")
         else:
             loguru.logger.warning("Количество блоков неверное")
-            return "Ошибка в количестве блоков"
+            raise Exception("Ошибка в количестве блоков")
 
         results = {}
         index_start = 0
@@ -186,8 +186,6 @@ class ParserFSSP:
             loguru.logger.info(f"Попытка - {i + 1}")
             try:
                 result = cls._get_result(input_task)
-                if isinstance(result, str):
-                    raise Exception(result)
 
                 loguru.logger.success(result)
                 return result
