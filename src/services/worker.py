@@ -101,7 +101,7 @@ class ParserFSSP:
         soup2 = BeautifulSoup(cls._prepare_test_to_html(response2.text), 'html.parser')
 
         if "по вашему запросу ничего не найдено" in soup2.text.lower():
-            return "Ничего не найдено"
+            return {}
 
         results_frame = soup2.find('div', class_='results-frame')
         if not results_frame:
@@ -183,6 +183,11 @@ class ParserFSSP:
 
 
 if __name__ == '__main__':
-    pass
+    print(ParserFSSP.create_task({
+        "last_name": "Климов",
+        "first_name": "Денис",
+        "middle_name": "Максимович",
+        "birth_date": "18.11.2003"
+    }))
 
 
