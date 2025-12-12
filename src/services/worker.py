@@ -166,7 +166,7 @@ class ParserFSSP:
         return results
 
     @classmethod
-    def start_parse(cls, input_task: dict):
+    def create_task(cls, input_task: dict):
         input_task = InputTask(**input_task)
 
         loguru.logger.info(f"Старт работы парсера - {input_task}")
