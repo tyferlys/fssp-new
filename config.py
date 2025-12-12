@@ -2,21 +2,22 @@ import os
 from functools import lru_cache
 from typing import Any
 
-import loguru
 from pydantic.v1 import BaseSettings
 from dotenv import find_dotenv
 
 
 class Settings(BaseSettings):
-    proxy_host: str
+    queue_for_tasks_input: str
+    queue_for_tasks_output: str
 
+    rabbitmq_login: str
+    rabbitmq_password: str
+    rabbitmq_host: str
 
     def __init__(self, **values: Any):
         super().__init__(**values)
-        try:
-            self.proxy_host = os.environ["PROXY_HOST"]
-        except Exception as e:
-            # loguru.logger.exception(e)
+        for attribute, value in self.__dict__.items():
+            self.__dict__[attribute] = os.getenv(attribute, value)
             pass
 
     class Config:

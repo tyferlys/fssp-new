@@ -1,27 +1,13 @@
-import base64
 import json
 import os
 import re
-import shutil
-import tempfile
-import time
-import uuid
 
 import loguru
 import requests
 from bs4 import BeautifulSoup
-from selenium.webdriver import Keys
-from selenium.webdriver.chrome.options import Options
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium import webdriver
-
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-
-from src.task.schemas import InputTask, OutputTask
-from src.utils.CaptchaManager import CaptchaManager
+from src.schemas.schemas import InputTask
+from src.services.utils.CaptchaManager import CaptchaManager
 
 
 class ParserFSSP:
@@ -180,7 +166,9 @@ class ParserFSSP:
         return results
 
     @classmethod
-    def start_parse(cls, input_task: InputTask):
+    def start_parse(cls, input_task: dict):
+        input_task = InputTask(**input_task)
+
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         for i in range(0, 3):
             loguru.logger.info(f"Попытка - {i + 1}")
@@ -195,13 +183,6 @@ class ParserFSSP:
 
 
 if __name__ == '__main__':
-    ParserFSSP.start_parse(
-        InputTask(
-            last_name="Черноглазов",
-            first_name="Владислав",
-            middle_name="Сергеевич",
-            birth_date="22.04.1989"
-        )
-    )
+    pass
 
 

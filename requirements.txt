@@ -6,3 +6,5 @@ pydantic
 requests
 2captcha-python
 beautifulsoup4
+aio-pika
+python-dotenv
