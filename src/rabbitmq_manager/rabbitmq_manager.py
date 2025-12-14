@@ -50,7 +50,7 @@ class RabbitMQManager:
             )
             await channel.default_exchange.publish(
                 response_message,
-                routing_key=QUEUE_NAME_OUTPUT
+                routing_key=message.reply_to
             )
 
             await connection.close()
