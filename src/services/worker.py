@@ -3,11 +3,14 @@ import os
 import re
 
 import loguru
-import requests
+#import requests
 from bs4 import BeautifulSoup
 
 from src.schemas.schemas import InputTask
 from src.services.utils.CaptchaManager import CaptchaManager
+from curl_cffi import requests
+
+from src.services.utils.get_result_html import get_result_html
 
 
 class ParserFSSP:
@@ -21,84 +24,9 @@ class ParserFSSP:
         return data["data"]
 
     @classmethod
-    def _get_result(cls, input_task: InputTask):
-        params1 = {
-            "callback": "jQuery37105573464652258195_1763455204114",
-            "system": "ip",
-            "is[extended]": "1",
-            "nocache": "1",
-            "is[variant]": "1",
-            "is[region_id][0]": "-1",
-            "is[last_name]": input_task.last_name,
-            "is[first_name]": input_task.first_name,
-            "is[drtr_name]": "",
-            "is[ip_number]": "",
-            "is[patronymic]": input_task.middle_name,
-            "is[date]": input_task.birth_date,
-            "is[address]": "",
-            "is[id_number]": "",
-            "is[id_type][0]": "",
-            "is[id_issuer]": "",
-            "is[inn]": "",
-            "_": "1763455204124"
-        }
-        headers1 = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
-            "Upgrade-Insecure-Requests": "1"
-        }
-
-        response1 = requests.get("https://is-go.fssp.gov.ru/ajax_search", params=params1, headers=headers1)
-        soup1 = BeautifulSoup(cls._prepare_test_to_html(response1.text), 'html.parser')
-
-        captcha_base64 = soup1.find('img').get('src')
-        code_id = soup1.find('form').get('url').split('code_id=')[1].split('&')[0]
-
-        captcha = CaptchaManager.get_answer_captcha(captcha_base64)
-        loguru.logger.success(f"Каптча распознана - {captcha}")
-
-        params2 = {
-            "callback": "jQuery37105573464652258195_1763455204114",
-            "is[variant]": "1",
-            "is[ip_number]": "",
-            "is[date]": input_task.birth_date,
-            "is[id_type][0]": "",
-            "is[inn]": "(empty)",
-            "is[region_id][0]": "-1",
-            "is[last_name]": input_task.last_name,
-            "is[drtr_name]": "",
-            "is[address]": "",
-            "is[id_issuer]": "",
-            "is[extended]": "1",
-            "nocache": "1",
-            "is[id_number]": "",
-            "system": "ip",
-            "is[first_name]": input_task.first_name,
-            "is[patronymic]": input_task.middle_name,
-            "code_id": code_id,
-            "code": captcha,
-            "_": "1763455204125"
-        }
-        headers2 = {
-            "accept": "*/*",
-            "accept-encoding": "gzip, deflate, br, zstd",
-            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
-            "cookie": "_ym_uid=1760168378506978246; _ym_d=1760168378; _ym_isad=2",
-            "referer": "https://fssp.gov.ru/",
-            "sec-ch-ua": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-fetch-dest": "script",
-            "sec-fetch-mode": "no-cors",
-            "sec-fetch-site": "same-site",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
-        }
-
-        response2 = requests.get("https://is-go.fssp.gov.ru/ajax_search", params=params2, headers=headers2)
-        soup2 = BeautifulSoup(cls._prepare_test_to_html(response2.text), 'html.parser')
+    def _get_result(cls, input_task: dict):
+        result_html = get_result_html(input_task)
+        soup2 = BeautifulSoup(result_html, 'html.parser')
 
         if "по вашему запросу ничего не найдено" in soup2.text.lower():
             return {}
@@ -167,8 +95,6 @@ class ParserFSSP:
 
     @classmethod
     def create_task(cls, input_task: dict):
-        input_task = InputTask(**input_task)
-
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         for i in range(0, 3):
             loguru.logger.info(f"Попытка - {i + 1}")
@@ -177,17 +103,17 @@ class ParserFSSP:
                 loguru.logger.success(result)
                 return result
             except Exception as e:
-                loguru.logger.error(e)
+                loguru.logger.exception(e)
 
         raise Exception()
 
 
 if __name__ == '__main__':
     print(ParserFSSP.create_task({
-        "last_name": "Климов",
-        "first_name": "Денис",
-        "middle_name": "Максимович",
-        "birth_date": "18.11.2003"
+        "last_name": "Кириллов",
+        "first_name": "Владимир",
+        "middle_name": "Ильич",
+        "birth_date": "31.05.1956"
     }))
 
 
