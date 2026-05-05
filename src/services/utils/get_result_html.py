@@ -8,7 +8,7 @@ from src.services.utils.CaptchaManager import CaptchaManager
 async def get_result_html(input_task: dict):
     async def browser_first_request(input_task):
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=True)
+            browser = await p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-setuid-sandbox"])
             page = await browser.new_page()
 
             url = "https://is-go.fssp.gov.ru/ajax_search"
@@ -54,7 +54,7 @@ async def get_result_html(input_task: dict):
 
     async def browser_second_request(input_task, code_id, captcha):
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=True)
+            browser = await p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-setuid-sandbox"])
             page = await browser.new_page()
 
             url = "https://is-go.fssp.gov.ru/ajax_search"
