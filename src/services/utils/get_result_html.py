@@ -39,7 +39,7 @@ async def get_result_html(input_task: dict):
             response = await page.goto(full_url, wait_until="networkidle")
             text = await response.text()
             json_str = re.search(r"\((.*)\)", text, re.S).group(1)
-
+            print(json_str)
             data = json.loads(json_str)
 
             return data["data"]
