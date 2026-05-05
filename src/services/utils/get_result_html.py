@@ -1,15 +1,15 @@
 import loguru
-from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 import re
 import json
 from src.services.utils.CaptchaManager import CaptchaManager
 
-def get_result_html(input_task: dict):
-    def browser_first_request(input_task):
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
+async def get_result_html(input_task: dict):
+    async def browser_first_request(input_task):
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            page = await browser.new_page()
 
             url = "https://is-go.fssp.gov.ru/ajax_search"
 
@@ -36,8 +36,8 @@ def get_result_html(input_task: dict):
 
             full_url = url + "?" + "&".join([f"{k}={v}" for k, v in params.items()])
 
-            response = page.goto(full_url, wait_until="networkidle")
-            text = response.text()
+            response = await page.goto(full_url, wait_until="networkidle")
+            text = await response.text()
             json_str = re.search(r"\((.*)\)", text, re.S).group(1)
 
             data = json.loads(json_str)
@@ -52,10 +52,10 @@ def get_result_html(input_task: dict):
 
         return captcha_base64, code_id
 
-    def browser_second_request(input_task, code_id, captcha):
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
+    async def browser_second_request(input_task, code_id, captcha):
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            page = await browser.new_page()
 
             url = "https://is-go.fssp.gov.ru/ajax_search"
 
@@ -84,15 +84,15 @@ def get_result_html(input_task: dict):
 
             full_url = url + "?" + "&".join([f"{k}={v}" for k, v in params.items()])
 
-            response = page.goto(full_url, wait_until="networkidle")
-            text = response.text()
+            response = await page.goto(full_url, wait_until="networkidle")
+            text = await response.text()
             json_str = re.search(r"\((.*)\)", text, re.S).group(1)
 
             data = json.loads(json_str)
 
             return data["data"]
 
-    html1 = browser_first_request(input_task)
+    html1 = await browser_first_request(input_task)
 
     captcha_base64, code_id = parse_captcha(html1)
 
@@ -104,6 +104,6 @@ def get_result_html(input_task: dict):
         else:
             raise Exception()
 
-    html2 = browser_second_request(input_task, code_id, captcha)
+    html2 = await browser_second_request(input_task, code_id, captcha)
 
     return html2

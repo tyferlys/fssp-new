@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 import re
@@ -23,8 +24,8 @@ class ParserFSSP:
         return data["data"]
 
     @classmethod
-    def _get_result(cls, input_task: dict):
-        result_html = get_result_html(input_task)
+    async def _get_result(cls, input_task: dict):
+        result_html = await get_result_html(input_task)
         soup2 = BeautifulSoup(result_html, 'html.parser')
 
         if "по вашему запросу ничего не найдено" in soup2.text.lower():
@@ -93,12 +94,12 @@ class ParserFSSP:
         return results
 
     @classmethod
-    def create_task(cls, input_task: dict):
+    async def create_task(cls, input_task: dict):
         loguru.logger.info(f"Старт работы парсера - {input_task}")
         for i in range(0, 3):
             loguru.logger.info(f"Попытка - {i + 1}")
             try:
-                result = cls._get_result(input_task)
+                result = await cls._get_result(input_task)
                 loguru.logger.success(result)
                 return result
             except Exception as e:
@@ -108,11 +109,14 @@ class ParserFSSP:
 
 
 if __name__ == '__main__':
-    print(ParserFSSP.create_task({
-        "last_name": "Кириллов",
-        "first_name": "Владимир",
-        "middle_name": "Ильич",
-        "birth_date": "31.05.1956"
-    }))
+    async def main():
+        print(await ParserFSSP.create_task({
+            "last_name": "Кириллов",
+            "first_name": "Владимир",
+            "middle_name": "Ильич",
+            "birth_date": "31.05.1956"
+        }))
+
+    asyncio.run(main())
 
 
