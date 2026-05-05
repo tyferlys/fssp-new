@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 
 from src.schemas.schemas import InputTask
 from src.services.utils.CaptchaManager import CaptchaManager
-from curl_cffi import requests
 
 from src.services.utils.get_result_html import get_result_html
 
