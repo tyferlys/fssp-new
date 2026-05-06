@@ -9,7 +9,13 @@ async def get_result_html(input_task: dict):
     async def browser_first_request(input_task):
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-setuid-sandbox"])
-            page = await browser.new_page()
+            context = await browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                           "AppleWebKit/537.36 (KHTML, like Gecko) "
+                           "Chrome/120.0.0.0 Safari/537.36"
+            )
+
+            page = await context.new_page()
 
             url = "https://is-go.fssp.gov.ru/ajax_search"
 
@@ -39,7 +45,6 @@ async def get_result_html(input_task: dict):
             response = await page.goto(full_url, wait_until="networkidle")
             text = await response.text()
             json_str = re.search(r"\((.*)\)", text, re.S).group(1)
-            print(json_str)
             data = json.loads(json_str)
 
             return data["data"]
@@ -55,7 +60,13 @@ async def get_result_html(input_task: dict):
     async def browser_second_request(input_task, code_id, captcha):
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-setuid-sandbox"])
-            page = await browser.new_page()
+            context = await browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                           "AppleWebKit/537.36 (KHTML, like Gecko) "
+                           "Chrome/120.0.0.0 Safari/537.36"
+            )
+
+            page = await context.new_page()
 
             url = "https://is-go.fssp.gov.ru/ajax_search"
 
