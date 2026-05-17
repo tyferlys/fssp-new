@@ -114,7 +114,6 @@ async def get_result_html(input_task: dict):
     captcha_base64, code_id = parse_captcha(html1)
 
     for i in range(0, 3):
-        print(captcha_base64)
         captcha = CaptchaManager.get_answer_captcha(captcha_base64)
         if captcha:
             loguru.logger.success(f"Каптча распознана - {captcha}")
