@@ -54,7 +54,7 @@ async def get_result_html(input_task: dict):
 
     def parse_captcha(html):
         soup = BeautifulSoup(html, "html.parser")
-
+        print(soup)
         captcha_base64 = soup.find("img")["src"]
         code_id = soup.find("form")["url"].split("code_id=")[1].split("&")[0]
 
