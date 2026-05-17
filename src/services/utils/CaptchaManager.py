@@ -5,14 +5,14 @@ import time
 
 import loguru
 import requests
-from twocaptcha.solver import TwoCaptcha
+from twocaptcha import TwoCaptcha
 import twocaptcha
 
 class CaptchaManager:
     @classmethod
     def get_answer_captcha(cls, image_base64):
         try:
-            solver = TwoCaptcha('626c4a478c32b7e199d8b9e5b4868f10', server="rucaptcha.com")
+            solver = TwoCaptcha('626c4a478c32b7e199d8b9e5b4868f10')
             result = solver.normal(image_base64, numeric=0, lang="ru")
             return result["code"]
         except requests.exceptions.ConnectionError:
