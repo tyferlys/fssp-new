@@ -19,7 +19,8 @@ class CaptchaManager:
         except requests.exceptions.ConnectionError:
             loguru.logger.warning("Ошибка подключения к сервису каптчи, переподключаемся")
             return None
-        except twocaptcha.api.NetworkException:
+        except twocaptcha.api.NetworkException as e:
+            loguru.logger.exception(e)
             loguru.logger.warning("Сервис каптчи разорвал соединение, пробуем еще раз")
             return None
         except Exception as e:
