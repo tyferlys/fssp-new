@@ -21,10 +21,22 @@ def solve_image_captcha_2captcha(
 ) -> str:
     """
     Решает ImageToText капчу через 2Captcha API v2.
-
-    proxy формат:
-    "login:password@ip:port"
+    ВСЕ запросы идут через requests proxies.
     """
+
+    proxies = None
+
+    if proxy:
+        login_pass, ip_port = proxy.split("@")
+        login, password = login_pass.split(":")
+        ip, port = ip_port.split(":")
+
+        proxy_url = f"http://{login}:{password}@{ip}:{port}"
+
+        proxies = {
+            "http": proxy_url,
+            "https": proxy_url
+        }
 
     task = {
         "type": "ImageToTextTask",
@@ -37,21 +49,7 @@ def solve_image_captcha_2captcha(
         "maxLength": 5,
     }
 
-    # добавляем прокси если есть
-    if proxy:
-        login_pass, ip_port = proxy.split("@")
-        login, password = login_pass.split(":")
-        ip, port = ip_port.split(":")
-
-        task.update({
-            "proxyType": "http",
-            "proxyAddress": ip,
-            "proxyPort": int(port),
-            "proxyLogin": login,
-            "proxyPassword": password
-        })
-
-    # 1. создаём задачу
+    # 1. createTask (через прокси)
     r = requests.post(
         "https://api.2captcha.com/createTask",
         json={
@@ -59,7 +57,9 @@ def solve_image_captcha_2captcha(
             "task": task,
             "softId": 3898,
             "languagePool": "rn"
-        }
+        },
+        proxies=proxies,
+        timeout=20
     ).json()
 
     if r.get("errorId") != 0:
@@ -67,7 +67,7 @@ def solve_image_captcha_2captcha(
 
     task_id = r["taskId"]
 
-    # 2. ждём результат
+    # 2. polling результата (через прокси)
     start = time.time()
 
     while True:
@@ -78,7 +78,9 @@ def solve_image_captcha_2captcha(
             json={
                 "clientKey": api_key,
                 "taskId": task_id
-            }
+            },
+            proxies=proxies,
+            timeout=20
         ).json()
 
         if res.get("status") == "ready":
