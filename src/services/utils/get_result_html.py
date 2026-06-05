@@ -45,7 +45,7 @@ async def get_result_html(input_task: dict):
 
             full_url = url + "?" + "&".join([f"{k}={v}" for k, v in params.items()])
 
-            response = await page.goto(full_url, wait_until="networkidle")
+            response = await page.goto(full_url, wait_until="networkidle", timeout = 60 * 5 * 1000)
             text = await response.text()
             json_str = re.search(r"\((.*)\)", text, re.S).group(1)
             data = json.loads(json_str)
