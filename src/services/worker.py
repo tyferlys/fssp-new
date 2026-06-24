@@ -46,15 +46,16 @@ class ParserFSSP:
         results = {}
         index_start = 0
         index_block = 0
+
         while index_start + 8 <= len(rows):
-            person = re.sub(r'\s+', ' ', rows[index_start + 0].text.strip())
-            person_lines = [re.sub(r'\s+', ' ', line.strip()) for line in rows[index_start + 0].text.strip().split('\n')]
-            ip_num_lines = [re.sub(r'\s+', ' ', line.strip()) for line in rows[index_start + 1].text.strip().split('\n')]
-            requisites = re.sub(r'\s+', ' ', rows[index_start + 2].text.strip())
-            ip_end = re.sub(r'\s+', ' ', rows[index_start + 3].text.strip())
-            amount = re.sub(r'\s+', ' ', rows[index_start + 5].text.strip())
-            department = re.sub(r'\s+', ' ', rows[index_start + 6].text.strip())
-            bailiff = re.sub(r'\s+', ' ', rows[index_start + 7].text.strip())
+            person = re.sub(r'\s+', ' ', rows[index_start + 0].get_text(separator='\n').strip())
+            person_lines = [re.sub(r'\s+', ' ', line.strip()) for line in rows[index_start + 0].get_text(separator='\n').strip().split('\n')]
+            ip_num_lines = [re.sub(r'\s+', ' ', line.strip()) for line in rows[index_start + 1].get_text(separator='\n').strip().split('\n')]
+            requisites = re.sub(r'\s+', ' ', rows[index_start + 2].get_text(separator='\n').strip())
+            ip_end = re.sub(r'\s+', ' ', rows[index_start + 3].get_text(separator='\n').strip())
+            amount = re.sub(r'\s+', ' ', rows[index_start + 5].get_text(separator='\n').strip())
+            department = re.sub(r'\s+', ' ', rows[index_start + 6].get_text(separator='\n').strip())
+            bailiff = re.sub(r'\s+', ' ', rows[index_start + 7].get_text(separator='\n').strip())
             amount_sum_search = re.search(r'\d+\.\d{2}', amount)
 
             result = {
@@ -96,7 +97,7 @@ class ParserFSSP:
     @classmethod
     async def create_task(cls, input_task: dict):
         loguru.logger.info(f"Старт работы парсера - {input_task}")
-        for i in range(0, 3):
+        for i in range(0, 5):
             loguru.logger.info(f"Попытка - {i + 1}")
             try:
                 result = await cls._get_result(input_task)
