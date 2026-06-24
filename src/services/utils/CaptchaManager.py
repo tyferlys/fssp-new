@@ -96,7 +96,7 @@ class CaptchaManager:
     @classmethod
     def get_answer_captcha(cls, image_base64):
         try:
-            return solve_image_captcha_2captcha('626c4a478c32b7e199d8b9e5b4868f10', image_base64, "1qVXkxLn:q8FTdQyd@154.194.104.8:64298")
+            return solve_image_captcha_2captcha('626c4a478c32b7e199d8b9e5b4868f10', image_base64, "1qVXkxLn:q8FTdQyd@154.194.73.236:62486")
         except requests.exceptions.ConnectionError:
             loguru.logger.warning("Ошибка подключения к сервису каптчи, переподключаемся")
             return None
