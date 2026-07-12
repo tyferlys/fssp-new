@@ -3,7 +3,7 @@ from src.services.worker import ParserFSSP
 
 if __name__ == "__main__":
     manager = RabbitMQManager(
-        count_workers=5,
+        count_workers=1,
         callback_function=ParserFSSP.create_task
     )
     manager.start()
