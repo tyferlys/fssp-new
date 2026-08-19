@@ -9,7 +9,7 @@ async def get_result_html(input_task: dict):
     async def browser_first_request(context, input_task):
         page = await context.new_page()
 
-        url = "https://is-node1.fssp.gov.ru/ajax_search"
+        url = "https://is-node7.fssp.gov.ru/ajax_search"
 
         params = {
             "callback": "jQuery37106850208189910238_1777367746595",
@@ -52,7 +52,7 @@ async def get_result_html(input_task: dict):
     async def browser_second_request(context, input_task, code_id, captcha, url_add):
         page = await context.new_page()
 
-        url = "https://is-node1.fssp.gov.ru"
+        url = "https://is-node7.fssp.gov.ru"
 
         full_url = url + url_add + f"&code={captcha}"
 
@@ -92,6 +92,7 @@ async def get_result_html(input_task: dict):
             html2 = await browser_second_request(context, input_task, code_id, captcha, url_add)
             return html2
         except Exception as e:
+            loguru.logger.error(e)
             raise Exception(e)
         finally:
             await context.close()

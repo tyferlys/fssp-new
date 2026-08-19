@@ -6,6 +6,7 @@ import re
 import loguru
 #import requests
 from bs4 import BeautifulSoup
+from pyee import cls
 
 from src.schemas.schemas import InputTask
 from src.services.utils.CaptchaManager import CaptchaManager
@@ -33,6 +34,7 @@ class ParserFSSP:
 
         results_frame = soup2.find('div', class_='results-frame')
         if not results_frame:
+            print(results_frame)
             raise Exception("Таблица не найдена")
 
         rows = soup2.find_all('td', attrs={'colspan': False})
@@ -107,16 +109,21 @@ class ParserFSSP:
                 loguru.logger.exception(e)
 
         raise Exception()
+        loguru.logger.critical("не решилось")
 
 
 if __name__ == '__main__':
     async def main():
-        print(await ParserFSSP.create_task({
-            "last_name": "Кириллов",
-            "first_name": "Владимир",
-            "middle_name": "Ильич",
-            "birth_date": "31.05.1956"
-        }))
+        for i in range(10):
+            tasks = []
+            for j in range(1):
+                tasks.append(asyncio.create_task(ParserFSSP.create_task({
+                    "last_name": "Кириллов",
+                    "first_name": "Владимир",
+                    "middle_name": "Ильич",
+                    "birth_date": "31.05.1956"
+                })))
+            await asyncio.gather(*tasks)
 
     asyncio.run(main())
 
