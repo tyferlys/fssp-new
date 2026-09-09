@@ -9,7 +9,7 @@ async def get_result_html(input_task: dict):
     async def browser_first_request(context, input_task):
         page = await context.new_page()
 
-        url = "https://is-node7.fssp.gov.ru/ajax_search"
+        url = "https://is-go.fssp.gov.ru/ajax_search"
 
         params = {
             "callback": "jQuery37106850208189910238_1777367746595",
@@ -52,7 +52,7 @@ async def get_result_html(input_task: dict):
     async def browser_second_request(context, input_task, code_id, captcha, url_add):
         page = await context.new_page()
 
-        url = "https://is-node7.fssp.gov.ru"
+        url = "https://is-go.fssp.gov.ru"
 
         full_url = url + url_add + f"&code={captcha}"
 
