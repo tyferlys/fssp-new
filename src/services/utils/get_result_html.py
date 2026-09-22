@@ -64,7 +64,6 @@ async def get_result_html(input_task: dict):
         text = await response.text()
 
         json_str = re.search(r'\{.*\}', text, re.DOTALL).group(0)
-        loguru.logger.info(json_str)
         data = json.loads(json_str)
 
         return data["data"]
