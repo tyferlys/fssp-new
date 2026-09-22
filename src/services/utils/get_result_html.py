@@ -1,3 +1,5 @@
+import uuid
+
 import loguru
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
@@ -29,14 +31,16 @@ async def get_result_html(input_task: dict):
             "is[id_type][0]": "",
             "is[id_issuer]": "",
             "is[inn]": "",
-            "_": "1777367746628"
+            "_": f"{uuid.uuid4()}"
         }
 
         full_url = url + "?" + "&".join([f"{k}={v}" for k, v in params.items()])
 
         response = await page.goto(full_url, wait_until="networkidle", timeout = 60 * 5 * 1000)
         text = await response.text()
+
         json_str = re.search(r"\((.*)\)", text, re.S).group(1)
+
         data = json.loads(json_str)
 
         return data["data"]
@@ -60,7 +64,7 @@ async def get_result_html(input_task: dict):
         text = await response.text()
 
         json_str = re.search(r'\{.*\}', text, re.DOTALL).group(0)
-
+        loguru.logger.info(json_str)
         data = json.loads(json_str)
 
         return data["data"]
@@ -92,7 +96,7 @@ async def get_result_html(input_task: dict):
             html2 = await browser_second_request(context, input_task, code_id, captcha, url_add)
             return html2
         except Exception as e:
-            loguru.logger.error(e)
+            loguru.logger.exception(e)
             raise Exception(e)
         finally:
             await context.close()
