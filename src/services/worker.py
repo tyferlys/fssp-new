@@ -35,6 +35,7 @@ class ParserFSSP:
         results_frame = soup2.find('div', class_='results-frame')
         if not results_frame:
             print(results_frame)
+            print(soup2.text)
             raise Exception("Таблица не найдена")
 
         rows = soup2.find_all('td', attrs={'colspan': False})
