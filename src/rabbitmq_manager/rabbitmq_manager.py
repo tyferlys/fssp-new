@@ -63,7 +63,10 @@ class RabbitMQManager:
         channel = await connection.channel()
         await channel.set_qos(prefetch_count=1)
 
-        queue = await channel.declare_queue(QUEUE_NAME_INPUT)
+        queue = await channel.declare_queue(
+            QUEUE_NAME_INPUT,
+            arguments={"x-max-priority": 3},
+        )
 
         await queue.consume(self.callback)
         await asyncio.Future()
